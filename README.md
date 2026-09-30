@@ -21,6 +21,18 @@ Regras aplicadas:
 - **PDF:** se o anexo falhar, o sistema envia um link curto rastreado (`/m/mapa`).
 - **Modo "Link imediato"** (opcional por automação): o link do PDF segue já na primeira mensagem, sem o toque intermediário.
 
+## Monitoramento do perfil
+
+Aba **Monitoramento**, com períodos de 7, 30 e 90 dias:
+
+- **Indicadores:** seguidores, contas alcançadas, engajamento sobre alcance e toques nos links do perfil, com a variação sobre o período anterior.
+- **Leituras do período:** observações calculadas a partir dos dados, como variação de alcance, crescimento, formato que mais alcança, conteúdo mais salvo e mais compartilhado, melhor dia de publicação, pedidos de material pela automação e participação do Brasil na audiência. Cada leitura só aparece com base mínima de dados.
+- **Gráficos:** seguidores por dia e alcance diário.
+- **Publicações:** alcance, interações, salvamentos, compartilhamentos, engajamento e pedidos de material de cada uma.
+- **Audiência:** países, cidades, faixa etária e gênero. A Meta libera esses dados a partir de 100 seguidores.
+
+A coleta roda todos os dias às 6h40, horário de Brasília, e pode ser disparada no botão **Atualizar agora**. A primeira coleta recupera 30 dias. O histórico de seguidores começa no dia da primeira coleta, porque a API não fornece esse histórico retroativo.
+
 ## Estrutura técnica
 
 | Parte | Tecnologia |

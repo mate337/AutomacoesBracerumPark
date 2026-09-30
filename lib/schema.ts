@@ -71,4 +71,49 @@ export const SCHEMA: string[] = [
   created_at  timestamptz not null default now()
 )`,
   `create index if not exists event_log_created_idx on event_log (created_at desc)`,
+  `create table if not exists account_daily (
+  day                date primary key,
+  followers          integer,
+  reach              integer,
+  views              integer,
+  accounts_engaged   integer,
+  total_interactions integer,
+  likes              integer,
+  comments           integer,
+  shares             integer,
+  saves              integer,
+  profile_links_taps integer,
+  follows            integer,
+  unfollows          integer,
+  updated_at         timestamptz not null default now()
+)`,
+  `create table if not exists media_items (
+  id                 text primary key,
+  media_type         text,
+  media_product_type text,
+  caption            text,
+  permalink          text,
+  thumbnail_url      text,
+  posted_at          timestamptz,
+  reach              integer,
+  views              integer,
+  likes              integer,
+  comments           integer,
+  shares             integer,
+  saves              integer,
+  total_interactions integer,
+  avg_watch_ms       integer,
+  updated_at         timestamptz not null default now()
+)`,
+  `create index if not exists media_items_posted_idx on media_items (posted_at desc)`,
+  `create table if not exists audience (
+  kind        text not null,
+  key         text not null,
+  value       integer not null,
+  updated_at  timestamptz not null default now(),
+  primary key (kind, key)
+)`,
 ];
+
+/** Tabelas que precisam existir; se faltar alguma, o schema inteiro (idempotente) é aplicado. */
+export const TABLES = ["automations", "contacts", "deliveries", "messages", "settings", "event_log", "account_daily", "media_items", "audience"];

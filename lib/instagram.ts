@@ -97,3 +97,84 @@ export async function refreshToken(): Promise<{ expiresAt: string }> {
   await setSetting("ig_token_expires_at", expiresAt);
   return { expiresAt };
 }
+
+// ─── Monitoramento ─────────────────────────────────────────────────────
+
+export type MediaFull = Media & { media_product_type?: string; like_count?: number; comments_count?: number };
+
+/** Publicações recentes com os campos de monitoramento (percorre páginas até `max`). */
+export async function listMediaFull(max = 60): Promise<MediaFull[]> {
+  const out: MediaFull[] = [];
+  let next: string | null = null;
+  let first = true;
+  while (out.length < max && (first || next)) {
+    const page: { data: MediaFull[]; paging?: { next?: string } } = first
+      ? await call("/me/media", {
+          params: {
+            fields: "id,caption,media_type,media_product_type,media_url,thumbnail_url,permalink,timestamp,like_count,comments_count",
+            limit: String(Math.min(50, max)),
+          },
+        })
+      : await call(next!);
+    first = false;
+    out.push(...(page.data ?? []));
+    next = page.paging?.next ?? null;
+  }
+  return out.slice(0, max);
+}
+
+type InsightRow = { name: string; total_value?: { value?: number; breakdowns?: { results?: { dimension_values: string[]; value: number }[] }[] }; values?: { value: number }[] };
+
+/** Métricas da conta somadas em um intervalo (período de um dia, total_value). */
+export async function accountTotals(igId: string, metrics: string[], since: number, until: number, breakdown?: string) {
+  const params: Record<string, string> = {
+    metric: metrics.join(","), period: "day", metric_type: "total_value", since: String(since), until: String(until),
+  };
+  if (breakdown) params.breakdown = breakdown;
+  const data = await call<{ data: InsightRow[] }>(`/${igId}/insights`, { params });
+  return data.data ?? [];
+}
+
+/** Distribuição de seguidores por idade, gênero, cidade ou país. */
+export async function followerDemographics(igId: string, breakdown: "age" | "gender" | "city" | "country") {
+  for (const timeframe of ["this_month", "this_week"]) {
+    try {
+      const data = await call<{ data: InsightRow[] }>(`/${igId}/insights`, {
+        params: { metric: "follower_demographics", period: "lifetime", metric_type: "total_value", timeframe, breakdown },
+      });
+      const results = data.data?.[0]?.total_value?.breakdowns?.[0]?.results ?? [];
+      if (results.length) return results.map((r) => ({ key: r.dimension_values[0], value: r.value }));
+    } catch {
+      /* tenta o próximo recorte */
+    }
+  }
+  return [];
+}
+
+/** Métricas de uma publicação. Tenta o conjunto completo e recua se o formato não aceitar alguma métrica. */
+export async function mediaInsights(mediaId: string, productType?: string): Promise<Record<string, number>> {
+  const sets = [
+    ["reach", "views", "likes", "comments", "shares", "saved", "total_interactions"],
+    ["reach", "likes", "comments", "shares", "saved"],
+    ["reach"],
+  ];
+  const out: Record<string, number> = {};
+  for (const metrics of sets) {
+    try {
+      const data = await call<{ data: InsightRow[] }>(`/${mediaId}/insights`, { params: { metric: metrics.join(",") } });
+      for (const row of data.data ?? []) out[row.name] = row.values?.[0]?.value ?? row.total_value?.value ?? 0;
+      break;
+    } catch {
+      /* conjunto menor */
+    }
+  }
+  if (productType === "REELS") {
+    try {
+      const data = await call<{ data: InsightRow[] }>(`/${mediaId}/insights`, { params: { metric: "ig_reels_avg_watch_time" } });
+      out.ig_reels_avg_watch_time = data.data?.[0]?.values?.[0]?.value ?? 0;
+    } catch {
+      /* opcional */
+    }
+  }
+  return out;
+}

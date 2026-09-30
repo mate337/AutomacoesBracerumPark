@@ -1,5 +1,5 @@
 import { neon, type NeonQueryFunction } from "@neondatabase/serverless";
-import { SCHEMA } from "./schema";
+import { SCHEMA, TABLES } from "./schema";
 import { databaseUrl } from "./env";
 
 let client: NeonQueryFunction<false, false> | null = null;
@@ -21,8 +21,8 @@ export function ensureSchema(): Promise<void> {
   if (!ready) {
     ready = (async () => {
       const s = sql();
-      const [row] = (await s`select to_regclass('public.event_log') as t`) as { t: string | null }[];
-      if (row?.t) return;
+      const [row] = (await s`select count(*)::int as n from pg_tables where schemaname = 'public' and tablename = any(${TABLES})`) as { n: number }[];
+      if (row?.n === TABLES.length) return;
       for (const st of SCHEMA) await s.query(st);
     })().catch((e) => {
       ready = null;

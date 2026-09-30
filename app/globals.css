@@ -35,7 +35,7 @@ button, input, textarea, select { font: inherit; color: inherit; }
 ::selection { background: var(--accent-soft); }
 
 /* ── Estrutura ─────────────────────────────────────────── */
-.shell { min-height: 100vh; display: grid; grid-template-rows: auto 1fr auto; }
+.shell { min-height: 100vh; display: grid; grid-template-rows: auto 1fr auto; grid-template-columns: minmax(0, 1fr); }
 .topbar {
   display: flex; align-items: center; justify-content: space-between; gap: 24px;
   padding: 22px clamp(16px, 4vw, 56px); border-bottom: 1px solid var(--line);
@@ -248,7 +248,7 @@ button, input, textarea, select { font: inherit; color: inherit; }
 .table-wrap { overflow-x: auto; border-top: 1px solid var(--ink); }
 table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
 th { text-align: left; font-weight: 600; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); padding: 12px 14px 12px 0; border-bottom: 1px solid var(--line); white-space: nowrap; }
-td { padding: 14px 14px 14px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+td { padding: 14px 14px 14px 0; border-bottom: 1px solid var(--line); vertical-align: middle; }
 td .sub { color: var(--muted); font-size: 12px; }
 
 .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
@@ -287,3 +287,40 @@ td .sub { color: var(--muted); font-size: 12px; }
   .actions .spacer { display: none; }
   .actions .btn { flex: 1; }
 }
+
+/* ── Monitoramento ─────────────────────────────────────── */
+.seg a { padding: 9px 16px; font-size: 13px; color: var(--ink-2); display: inline-block; }
+.seg a + a { border-left: 1px solid var(--line-2); }
+.seg a.on { background: var(--ink); color: var(--paper); }
+.delta { display: inline-block; margin-left: 8px; font-size: 11.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.delta.up { color: var(--ok); }
+.delta.down { color: var(--err); }
+
+.insights { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--ink); }
+.insight { padding: 22px 28px 24px 0; border-bottom: 1px solid var(--line); position: relative; }
+.insight:nth-child(even) { padding-left: 28px; border-left: 1px solid var(--line); }
+.insight h3 { font-family: var(--serif); font-weight: 400; font-size: 24px; line-height: 1.12; margin: 0 0 8px; display: flex; gap: 10px; align-items: baseline; }
+.insight h3::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--muted); transform: translateY(-3px); }
+.insight.positive h3::before { background: var(--ok); }
+.insight.attention h3::before { background: var(--warn); }
+.insight p { margin: 0; color: var(--ink-2); font-size: 14px; max-width: 62ch; }
+@media (max-width: 900px) { .insights { grid-template-columns: 1fr; } .insight:nth-child(even) { padding-left: 0; border-left: 0; } }
+
+.hbars { display: flex; flex-direction: column; gap: 10px; }
+.hbar { display: grid; grid-template-columns: minmax(90px, 30%) 1fr 56px; gap: 12px; align-items: center; font-size: 13.5px; }
+.hbar-label { color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hbar-label small { color: var(--muted); margin-left: 6px; font-size: 11.5px; }
+.hbar-track { height: 10px; background: transparent; border-bottom: 1px solid var(--line); position: relative; }
+.hbar-track span { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent); border-radius: 0 4px 4px 0; max-width: 100%; }
+.hbar-value { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); }
+
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; border-top: 1px solid var(--ink); padding-top: 24px; }
+@media (max-width: 1100px) { .grid-4 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 640px) { .grid-4 { grid-template-columns: 1fr; } }
+
+th.r, td.r { text-align: right; font-variant-numeric: tabular-nums; }
+.post-cell { display: flex; gap: 12px; align-items: center; min-width: 260px; max-width: 420px; }
+.post-cell img, .thumb-empty { width: 44px; height: 55px; object-fit: cover; flex: none; background: var(--paper-2); border-radius: 2px; }
+.post-cell:hover { color: var(--accent); }
+.post-cell .sub { display: block; }
+svg .hit:hover path { opacity: .8; }
