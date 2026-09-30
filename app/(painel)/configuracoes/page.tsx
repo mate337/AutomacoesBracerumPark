@@ -22,7 +22,7 @@ export default async function Configuracoes() {
 
   const env = [
     ["Banco de dados", !!(process.env.DATABASE_URL || process.env.POSTGRES_URL)],
-    ["Armazenamento de PDFs", !!process.env.BLOB_READ_WRITE_TOKEN],
+    ["Armazenamento de PDFs", !!(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID)],
     ["Chave secreta do app", !!process.env.INSTAGRAM_APP_SECRET],
     ["Token de verificação do webhook", !!process.env.IG_WEBHOOK_VERIFY_TOKEN],
     ["Renovação automática", !!process.env.CRON_SECRET],

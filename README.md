@@ -48,7 +48,7 @@ O site atual na GoDaddy **não é alterado**. Apenas um registro DNS é criado p
 No projeto da Vercel, em **Storage**:
 
 1. **Create Database › Neon (Postgres)**. A variável `DATABASE_URL` é criada sozinha.
-2. **Create › Blob**. A variável `BLOB_READ_WRITE_TOKEN` é criada sozinha.
+2. **Create › Blob**, com acesso **Public**, conectado ao projeto. A Vercel cria `BLOB_STORE_ID` (Blobs novos) ou `BLOB_READ_WRITE_TOKEN` (Blobs antigos); o sistema aceita os dois.
 3. Faça **Redeploy**. As tabelas são criadas automaticamente no primeiro acesso ao painel.
 
 ### 3. Variáveis de ambiente

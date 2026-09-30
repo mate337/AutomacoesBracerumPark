@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { upload } from "@vercel/blob/client";
+import { upload, uploadPresigned } from "@vercel/blob/client";
 import type { AutomationContent, DeliveryMode, Lang, MatchMode } from "@/lib/types";
 import { fillTemplate, parseKeywords, normalize } from "@/lib/text";
 import { fmtSize } from "@/lib/format";
@@ -85,7 +85,10 @@ export default function AutomationForm({ id, initial, slug }: { id?: string; ini
     setProgress(0);
     try {
       const base = normalize(s.keywords[0] || s.name || "material").replace(/\s+/g, "-") || "material";
-      const blob = await upload(`materiais/${base}.pdf`, file, {
+      const { mode } = await fetch("/api/upload").then((r) => r.json());
+      if (mode === "none") throw new Error("o armazenamento de PDFs (Blob) ainda não está conectado ao projeto");
+      const send = mode === "presigned" ? uploadPresigned : upload;
+      const blob = await send(`materiais/${base}.pdf`, file, {
         access: "public",
         handleUploadUrl: "/api/upload",
         contentType: "application/pdf",
