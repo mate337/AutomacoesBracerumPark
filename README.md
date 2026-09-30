@@ -100,6 +100,7 @@ Em [developers.facebook.com](https://developers.facebook.com), com o Gerenciador
    - `instagram_business_basic`
    - `instagram_business_manage_comments`
    - `instagram_business_manage_messages`
+   - `instagram_business_manage_insights` (monitoramento)
 5. Informe a **URL da política de privacidade** (ex.: `bracerumpark.com.br/privacidade`) e coloque o app em modo **Ativo**.
 6. No aplicativo do Instagram, na conta @bracerumpark: **Configurações › Mensagens e respostas ao story › Controles de mensagens › Ferramentas conectadas › Permitir acesso às mensagens**.
 
