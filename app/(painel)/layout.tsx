@@ -1,11 +1,12 @@
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import { ensureSchema } from "@/lib/db";
+import { databaseUrl } from "@/lib/env";
 
 export const dynamic = "force-dynamic";
 
 async function setupProblem(): Promise<string | null> {
-  if (!(process.env.DATABASE_URL || process.env.POSTGRES_URL)) return "database";
+  if (!databaseUrl()) return "database";
   try {
     await ensureSchema();
     return null;

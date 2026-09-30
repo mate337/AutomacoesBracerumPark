@@ -2,8 +2,8 @@ export const SESSION_COOKIE = "bp_session";
 
 /** Token de sessão derivado do segredo; funciona no Edge e no Node. */
 export async function sessionToken(): Promise<string> {
-  const secret = process.env.SESSION_SECRET;
-  if (!secret) throw new Error("SESSION_SECRET não configurado.");
+  // SESSION_SECRET é recomendado; na ausência, a sessão continua atrelada à senha do painel.
+  const secret = process.env.SESSION_SECRET || "bracerum-park-central-instagram";
   const enc = new TextEncoder();
   const key = await crypto.subtle.importKey("raw", enc.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
   const sig = await crypto.subtle.sign("HMAC", key, enc.encode("bracerum-admin-v1:" + (process.env.ADMIN_PASSWORD || "")));

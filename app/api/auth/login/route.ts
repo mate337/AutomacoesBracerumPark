@@ -8,7 +8,12 @@ export async function POST(req: NextRequest) {
   const expected = process.env.ADMIN_PASSWORD ?? "";
   const target = new URL(next.startsWith("/") ? next : "/", req.url);
 
-  if (!expected || !safeEqual(password, expected)) {
+  if (!expected) {
+    const back = new URL("/login", req.url);
+    back.searchParams.set("erro", "config");
+    return NextResponse.redirect(back, 303);
+  }
+  if (!safeEqual(password, expected)) {
     await new Promise((r) => setTimeout(r, 600));
     const back = new URL("/login", req.url);
     back.searchParams.set("erro", "1");

@@ -16,7 +16,10 @@ export default async function Login({ searchParams }: { searchParams: Promise<{ 
       <main className="login-form">
         <p className="eyebrow">Acesso restrito</p>
         <h2 className="h2" style={{ marginBottom: 28 }}>Entrar no painel</h2>
-        {sp.erro && <div className="notice notice-err">Senha incorreta. Tente novamente.</div>}
+        {sp.erro === "config" && (
+          <div className="notice notice-err">A senha do painel ainda não foi definida. Cadastre ADMIN_PASSWORD nas variáveis da Vercel e faça um novo deploy.</div>
+        )}
+        {sp.erro === "1" && <div className="notice notice-err">Senha incorreta. Tente novamente.</div>}
         <form method="post" action="/api/auth/login">
           <input type="hidden" name="next" value={sp.next ?? "/"} />
           <div className="field">

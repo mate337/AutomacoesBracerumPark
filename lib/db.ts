@@ -1,5 +1,6 @@
 import { neon, type NeonQueryFunction } from "@neondatabase/serverless";
 import { SCHEMA } from "./schema";
+import { databaseUrl } from "./env";
 
 let client: NeonQueryFunction<false, false> | null = null;
 let ready: Promise<void> | null = null;
@@ -8,7 +9,7 @@ export class SetupError extends Error {}
 
 function sql() {
   if (!client) {
-    const url = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+    const url = databaseUrl();
     if (!url) throw new SetupError("Banco de dados não conectado (variável DATABASE_URL ausente).");
     client = neon(url);
   }

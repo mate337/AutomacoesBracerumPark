@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { handleUpload, handleUploadPresigned, type HandleUploadBody, type HandleUploadPresignedBody } from "@vercel/blob/client";
 import { issueSignedToken } from "@vercel/blob";
 import { SESSION_COOKIE, isValidSession } from "@/lib/auth";
+import { blobMode } from "@/lib/env";
 
 export const runtime = "nodejs";
 
@@ -56,6 +57,5 @@ export async function POST(req: NextRequest) {
 }
 
 export function GET() {
-  const mode = process.env.BLOB_READ_WRITE_TOKEN ? "token" : process.env.BLOB_STORE_ID ? "presigned" : "none";
-  return NextResponse.json({ mode });
+  return NextResponse.json({ mode: blobMode() });
 }

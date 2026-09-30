@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import { headers } from "next/headers";
 import { getSetting } from "@/lib/db";
+import { databaseUrl, blobMode } from "@/lib/env";
 import { getAccount, type Account } from "@/lib/instagram";
 import { fmtDate, fmtInt } from "@/lib/format";
 import { TokenForm, RefreshButton, CopyField } from "@/components/TokenForm";
@@ -21,8 +22,8 @@ export default async function Configuracoes() {
   const expires = await getSetting("ig_token_expires_at");
 
   const env = [
-    ["Banco de dados", !!(process.env.DATABASE_URL || process.env.POSTGRES_URL)],
-    ["Armazenamento de PDFs", !!(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID)],
+    ["Banco de dados", !!databaseUrl()],
+    ["Armazenamento de PDFs", blobMode() !== "none"],
     ["Chave secreta do app", !!process.env.INSTAGRAM_APP_SECRET],
     ["Token de verificação do webhook", !!process.env.IG_WEBHOOK_VERIFY_TOKEN],
     ["Renovação automática", !!process.env.CRON_SECRET],
