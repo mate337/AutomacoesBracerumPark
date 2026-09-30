@@ -49,11 +49,7 @@ No projeto da Vercel, em **Storage**:
 
 1. **Create Database › Neon (Postgres)**. A variável `DATABASE_URL` é criada sozinha.
 2. **Create › Blob**. A variável `BLOB_READ_WRITE_TOKEN` é criada sozinha.
-3. Crie as tabelas, uma única vez, no seu computador:
-   ```bash
-   npm install
-   DATABASE_URL="(copiar da Vercel)" npm run db:migrate
-   ```
+3. Faça **Redeploy**. As tabelas são criadas automaticamente no primeiro acesso ao painel.
 
 ### 3. Variáveis de ambiente
 
